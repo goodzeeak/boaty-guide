@@ -13,11 +13,12 @@ public class GuideDataLoader
 {
 	private static final String GUIDE_RESOURCE = "/com/boatyguide/guide_data.json";
 
-	private final Gson gson = new Gson();
+	private final Gson gson;
 
 	@Inject
-	public GuideDataLoader()
+	public GuideDataLoader(Gson gson)
 	{
+		this.gson = gson;
 	}
 
 	public GuideData load() throws IOException

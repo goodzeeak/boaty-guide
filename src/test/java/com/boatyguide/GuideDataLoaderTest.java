@@ -2,6 +2,7 @@ package com.boatyguide;
 
 import com.boatyguide.guide.GuideData;
 import com.boatyguide.guide.GuideDataLoader;
+import com.google.gson.GsonBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ public class GuideDataLoaderTest
 	@Test
 	public void loadsGeneratedGuideData() throws Exception
 	{
-		GuideDataLoader loader = new GuideDataLoader();
+		GuideDataLoader loader = new GuideDataLoader(new GsonBuilder().create());
 		GuideData data = loader.load();
 
 		Assert.assertNotNull(data);

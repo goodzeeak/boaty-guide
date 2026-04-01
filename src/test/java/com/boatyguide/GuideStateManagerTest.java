@@ -3,6 +3,7 @@ package com.boatyguide;
 import com.boatyguide.guide.GuideData;
 import com.boatyguide.guide.GuideDataLoader;
 import com.boatyguide.guide.GuideStep;
+import com.google.gson.GsonBuilder;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,7 @@ public class GuideStateManagerTest
 	@Test
 	public void preservesProgressAcrossReload() throws Exception
 	{
-		GuideData data = new GuideDataLoader().load();
+		GuideData data = loadGuideData();
 		InMemoryProgressStore store = new InMemoryProgressStore();
 		GuideStateManager manager = new GuideStateManager(store);
 
@@ -34,7 +35,7 @@ public class GuideStateManagerTest
 	@Test
 	public void togglesCurrentBankCompletionAndAdvances() throws Exception
 	{
-		GuideData data = new GuideDataLoader().load();
+		GuideData data = loadGuideData();
 		InMemoryProgressStore store = new InMemoryProgressStore();
 		GuideStateManager manager = new GuideStateManager(store);
 
@@ -56,7 +57,7 @@ public class GuideStateManagerTest
 	@Test
 	public void setsProgressToConfiguredBank() throws Exception
 	{
-		GuideData data = new GuideDataLoader().load();
+		GuideData data = loadGuideData();
 		InMemoryProgressStore store = new InMemoryProgressStore();
 		GuideStateManager manager = new GuideStateManager(store);
 
@@ -73,7 +74,7 @@ public class GuideStateManagerTest
 	@Test
 	public void nextCompletesAndPreviousUncompletes() throws Exception
 	{
-		GuideData data = new GuideDataLoader().load();
+		GuideData data = loadGuideData();
 		InMemoryProgressStore store = new InMemoryProgressStore();
 		GuideStateManager manager = new GuideStateManager(store);
 
@@ -95,7 +96,7 @@ public class GuideStateManagerTest
 	@Test
 	public void skipsWithdrawStepsInNavigation() throws Exception
 	{
-		GuideData data = new GuideDataLoader().load();
+		GuideData data = loadGuideData();
 		InMemoryProgressStore store = new InMemoryProgressStore();
 		GuideStateManager manager = new GuideStateManager(store);
 
@@ -111,7 +112,7 @@ public class GuideStateManagerTest
 	@Test
 	public void resolvesWithdrawDetailsSeparatelyFromAdvice() throws Exception
 	{
-		GuideData data = new GuideDataLoader().load();
+		GuideData data = loadGuideData();
 		InMemoryProgressStore store = new InMemoryProgressStore();
 		GuideStateManager manager = new GuideStateManager(store);
 
@@ -129,7 +130,7 @@ public class GuideStateManagerTest
 	@Test
 	public void allowsHandoffWhenOnlyTrailingBankAdviceRemains() throws Exception
 	{
-		GuideData data = new GuideDataLoader().load();
+		GuideData data = loadGuideData();
 		InMemoryProgressStore store = new InMemoryProgressStore();
 		GuideStateManager manager = new GuideStateManager(store);
 
@@ -139,6 +140,11 @@ public class GuideStateManagerTest
 		Assert.assertTrue(manager.isDepositHandoffStep());
 		Assert.assertTrue(manager.getCurrentWithdrawLines().stream()
 			.anyMatch(line -> line.startsWith("Withdraw: Coins, Air Runes, Mind Runes")));
+	}
+
+	private static GuideData loadGuideData() throws Exception
+	{
+		return new GuideDataLoader(new GsonBuilder().create()).load();
 	}
 
 	private static class InMemoryProgressStore implements GuideProgressStore
